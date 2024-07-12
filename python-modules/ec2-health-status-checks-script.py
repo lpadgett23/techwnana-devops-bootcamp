@@ -1,8 +1,8 @@
 import boto3
 import schedule
 
-ec2_client = boto3.client('ec2', region_name="us-east-1")
-ec2_resource = boto3.resource('ec2', region_name="us-east-1")
+ec2_client = boto3.client('ec2', region_name='eu-central-1')#, region_name="us-east-1")
+ec2_resource = boto3.resource('ec2', region_name='eu-central-1')#, region_name="us-east-1")
 
 
 # reservations = ec2_client.describe_instances()   # levels:  ['Reservations']['Instances']['State' & 'InstanceId']
