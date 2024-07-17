@@ -1,0 +1,15 @@
+[droplet]
+157.245.126.209
+174.138.64.7
+
+[droplet:vars]
+ansible_ssh_private_key_file=~/.ssh/id_rsa 
+ansible_user=root 
+
+[ec2]
+ec2-54-210-135-150.compute-1.amazonaws.com
+ec2-3-82-128-225.compute-1.amazonaws.com
+
+[ec2:vars]
+ansible_ssh_private_key_file=~/.ssh/ansible-key-pair.pem
+ansible_user=ec2-user 
