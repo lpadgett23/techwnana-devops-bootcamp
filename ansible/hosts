@@ -1,6 +1,6 @@
 [droplet]
-157.245.126.209
-174.138.64.7
+67.207.91.35
+67.207.91.22
 
 [droplet:vars]
 ansible_ssh_private_key_file=~/.ssh/id_rsa 
