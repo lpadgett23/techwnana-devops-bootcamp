@@ -1,0 +1,24 @@
+---
+- name: Configure nginx web server
+  hosts: webserver
+  tasks:
+  - name: install nginx server
+    apt: 
+      name: nginx=1.24.0-2ubuntu7  # launchpad.net/ubuntu - good place re understanding package versions, supported lts etc   # ansible apt also takes regex ngnix=1.24*
+      state: present
+  - name: start nginx server
+    service:
+      name: nginx
+      state: started
+  - name: stop nginx server
+    service:
+      name: nginx
+      state: stopped
+  - name: uninstall nginx server
+    apt:
+      name: ngnix=1.24*
+      state: absent
+  
+
+
+# this playbook is using the apt module and the service module
