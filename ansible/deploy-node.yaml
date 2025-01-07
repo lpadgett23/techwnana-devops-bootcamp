@@ -10,19 +10,31 @@
           - nodejs
           - npm
 
+- name: Create new linux user for node app
+  hosts: 167.172.145.81
+  tasks:
+    - name: Create linux user
+      user:
+        name: laura
+        comment: Laura Admin
+        group: admin
+
+
 - name: Deploy nodejs app
   hosts: 167.172.145.81
+  become: True
+  become_user: laura
   tasks:
     - name: Copy nodejs file to server then unpack the tar
       unarchive:
         src: /home/laura/twn-devops/ansible/nodejs-app-1.0.0.tgz
-        dest: /root/
+        dest: /home/laura
     - name: Install dependencies in package.json
       npm:
-        path: /root/package
+        path: /home/laura/package
     - name: Start the application
       command: 
-        chdir: /root/package/app
+        chdir: /home/laura/package/app
         cmd: node server
       async: 1000
       poll: 0
