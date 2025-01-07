@@ -1,6 +1,6 @@
 ---
 - name: Install node and npm
-  host: 167.172.145.81
+  hosts: 167.172.145.81
   tasks:
     - name: Update apt repo and cache
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
@@ -13,4 +13,12 @@
 - name: Deploy nodejs app
   hosts: 167.172.145.81
   tasks:
-    - name: Copy tar and unpack it
+    - name: Copy nodejs folder to a server
+      copy:
+        src: /home/laura/twn-devops/ansible/nodejs-app-1.0.0.tgz
+        dest: /root/app-1.0.0.tgz
+    - name: Unpack the nodejs tar file
+      unarchive:
+        src: /root/app-1.0.0.tgz
+        dest: /root/
+        remote_src: yes
