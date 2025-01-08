@@ -18,23 +18,30 @@
         name: laura
         comment: Laura Admin
         group: admin
-
+      register: user_creation_result
+    - debug: msg={{user_creation_result}}
 
 - name: Deploy nodejs app
   hosts: 167.172.145.81
   become: True
   become_user: laura
+  vars:
+    - app_file_directory: /home/laura/twn-devops
+    - version: 1.0.0
+    - destination: /home/laura
   tasks:
     - name: Copy nodejs file to server then unpack the tar
       unarchive:
-        src: /home/laura/twn-devops/ansible/nodejs-app-1.0.0.tgz
-        dest: /home/laura
+        src: "{{app_file_directory}}/ansible/nodejs-app-{{version}}.tgz"
+        dest: "{{destination}}"
+      register: user_creation_result
+    - debug: msg={{user_creation_result}}
     - name: Install dependencies in package.json
       npm:
-        path: /home/laura/package
+        path: "{{destination}}/package"
     - name: Start the application
       command: 
-        chdir: /home/laura/package/app
+        chdir: "{{destination}}/package/app"
         cmd: node server
       async: 1000
       poll: 0
