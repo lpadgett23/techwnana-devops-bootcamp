@@ -12,10 +12,12 @@
 
 - name: Create new linux user for node app
   hosts: 167.172.145.81
+  vars_files:
+    project-vars.yaml
   tasks:
     - name: Create linux user
       user:
-        name: laura
+        name: "{{linux_name}}"
         comment: Laura Admin
         group: admin
       register: user_creation_result
@@ -25,23 +27,24 @@
   hosts: 167.172.145.81
   become: True
   become_user: laura
+  vars_files:
+    project-vars.yaml
   vars:
-    - app_file_directory: /home/laura/twn-devops
-    - version: 1.0.0
-    - destination: /home/laura
+    - app_file_directory: /home/{{linux_name}}/twn-devops
+    - user_home_dir: /home/{{linux_name}}
   tasks:
     - name: Copy nodejs file to server then unpack the tar
       unarchive:
         src: "{{app_file_directory}}/ansible/nodejs-app-{{version}}.tgz"
-        dest: "{{destination}}"
+        dest: "{{user_home_dir}}"
       register: user_creation_result
     - debug: msg={{user_creation_result}}
     - name: Install dependencies in package.json
       npm:
-        path: "{{destination}}/package"
+        path: "{{user_home_dir}}/package"
     - name: Start the application
       command: 
-        chdir: "{{destination}}/package/app"
+        chdir: "{{user_home_dir}}/package/app"
         cmd: node server
       async: 1000
       poll: 0
