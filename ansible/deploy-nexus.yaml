@@ -12,10 +12,14 @@
 - name: Download and unpack Nexus installer
   hosts: 68.183.135.3
   tasks:
+    - name: Check nexus folder stats
+      stat:
+        path: /opt/nexus
+      register: stat_result
     - name: Download Nexus
       get_url:
         url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
-        dest: /opt
+        dest: /opt/
       register: download_result
     - debug: msg={{download_result}}
     - name: Untar Nexus installer
@@ -23,6 +27,7 @@
         src: "{{download_result.dest}}"
         dest: /opt/
         remote_src: True
+      when: not stat_result.stat.exists
     - name: Find nexus folder (with module that matches regex)
       find:
         paths: /opt
@@ -30,11 +35,11 @@
         file_type: directory
       register: find_result
     # - debug: msg={{find_result}}
-    - name: Check nexus folder stats
-      stat:
-        path: /opt/nexus
-      register: stat_result
-    - debug: msg={{stat_result}}
+    # - name: Check nexus folder stats
+    #   stat:
+    #     path: /opt/nexus
+    #   register: stat_result
+    # - debug: msg={{stat_result}}
     - name: Rename nexus folder
       shell: mv {{find_result.files[0].path}} /opt/nexus
       when: not stat_result.stat.exists
@@ -67,9 +72,17 @@
 
 - name: Start nexus with nexus user
   hosts: 68.183.135.3
+  become: True
+  become_user: nexus
   tasks:
     - name: Set run_as_user nexus
-      blockinfile:
+      # blockinfile:
+      #   path: /opt/nexus/bin/nexus.rc
+      #   block: |
+      #     run_as_user="nexus"
+      lineinfile:
         path: /opt/nexus/bin/nexus.rc
-        block: |
-          run_as_user="nexus"
+        regexp: '^#run_as_user=""'
+        line: run_as_user="nexus"
+    - name: Start nexus
+      command: /opt/nexus/bin/nexus start
