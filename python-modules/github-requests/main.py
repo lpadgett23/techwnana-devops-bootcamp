@@ -6,8 +6,8 @@ response = requests.get("https://api.github.com/repos/lpadgett23/techwnana-devop
 # print(type(response.json))
 # print(response.json()[0])
 
-my_issues = response.json()
+my_repo_issues = response.json()
 
-for issue in my_issues:
+for issue in my_repo_issues:
     print(f"Description of Issue: {issue['title']}\n Status: {issue['state']}\n")
 
