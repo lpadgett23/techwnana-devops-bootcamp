@@ -26,12 +26,24 @@
   become_user: laura
   tasks:
     - name: Create docker-compose directory
-
+      file:
+        path: ~/.docker/cli-plugins
+        state: directory
     - name: Get architecture of remote machine
-
+      shell: uname -m
+      register: remote_arch
     - name: Install docker-compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-{{ remote_arch.stdout }}"
+        dest: ~/.docker/cli-plugins/docker-compose
+        mode: +x
 
 - name: Start docker containers
   hosts: all
   become: yes
   become_user: laura
+  vars_files:
+    - project-vars
+  roles:
+    - start_containers
+
