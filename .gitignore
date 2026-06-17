@@ -34,3 +34,7 @@ terraform.rc
 
 *.iml
 *.idea
+
+venv
+.venv
+venv/
