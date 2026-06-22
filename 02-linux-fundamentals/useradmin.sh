@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 # check processes running for current user (USER env var)
 # and print to console
 # grep printenv | echo $USER | ps aux -U {$USER} -u {$USER}
@@ -18,5 +16,3 @@ echo -p "How many do you want to see?"
   read {$2}
 
 ps aux --sort=-%{$1} | head -n {$2}
-
-
